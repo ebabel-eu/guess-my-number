@@ -1,13 +1,14 @@
 {
   "name": "guess-my-number",
-  "description": "Guess a number",
+  "version": "2.0.0",
+  "description": "Guess my number",
   "main": "index.html",
   "dependencies": {
-    "polymer": "Polymer/polymer#^2.0.0",
-    "paper-styles": "^2.0.0"
+    "polymer": "Polymer/polymer#2.0.0",
+    "paper-styles": "2.0.0"
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
-    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    "web-component-tester": "Polymer/web-component-tester#6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#1.0.0"
   }
 }
