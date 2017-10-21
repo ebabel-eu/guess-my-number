@@ -19,7 +19,7 @@
 
       h1 {
         color: var(--paper-blue-900);
-        margin: 0 0 1em;
+        margin: 0 0 .5em;
       }
 
       h2 {
@@ -41,7 +41,7 @@
 
     <h1>Which number am I thinking of?</h1>
 
-    <template is="dom-if" if="[[!showWinGame]]">
+    <template is="dom-if" if="[[showAnswerChoices]]">
       <template is="dom-repeat" items="[[answerChoices]]">
         <button on-click="isCorrect">[[item]]</button>
       </template>
@@ -49,7 +49,7 @@
 
     <h2>
       <template is="dom-repeat" items="[[lifePointsArray]]">
-        [[item]]
+        <span>[[item]]</span>
       </template>
     </h2>
 
@@ -99,7 +99,10 @@
           },
           showWinGame: {
             type: Boolean,
-          }
+          },
+          showAnswerChoices: {
+            type: Boolean,
+          },
         };
       }
 
@@ -125,6 +128,8 @@
           this.showGameOver = this.lifePoints === 0;
           this.showWinGame = false;
         }
+
+        this.showAnswerChoices = !(this.showGameOver || this.showWinGame);
       }
 
       hiOrLo(e) {
@@ -155,6 +160,7 @@
         this.showGameOver = false;
         this.showWinGame = false;
         this.hint = " ";
+        this.showAnswerChoices = true;
       }
 
       constructor() {
