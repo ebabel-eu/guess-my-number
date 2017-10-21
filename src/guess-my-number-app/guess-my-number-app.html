@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -7,7 +8,22 @@
         display: block;
       }
     </style>
-    <h2>Hello [[prop1]]!</h2>
+    <h2>
+      [[lifePoints]] life points
+      <template is="dom-repeat" items="[[lifePointsArray]]">
+        [[item]]
+      </template>
+    </h2>
+
+    <p>Guess my number (between 0 and [[max]])</p>
+
+    <template is="dom-repeat" items="[[answerChoices]]">
+      <button on-click="loseLife">[[item]]</button>
+    </template>
+
+    <p>DEBUG: random number to guess is [[randomNumber]]</p>
+
+    <button on-click="init">Start again</button>
   </template>
 
   <script>
@@ -15,15 +31,58 @@
      * @customElement
      * @polymer
      */
+    const randomNumber = (max, min = 0) => Math.round(Math.random() * max) + min;
+
     class GuessMyNumberApp extends Polymer.Element {
       static get is() { return 'guess-my-number-app'; }
       static get properties() {
         return {
-          prop1: {
-            type: String,
-            value: 'guess-my-number-app'
-          }
+          max: {
+            type: Number,
+          },
+          lifePoints: {
+            type: Number,
+          },
+          randomNumber: {
+            type: Number,
+          },
+          answerChoices: {
+            type: Array,
+          },
+          lifePointsArray: {
+            type: Array,
+          },
         };
+      }
+
+      loseLife() {
+        this.lifePoints = (this.lifePoints - 1 > 0) ?
+          this.lifePoints - 1 : 0;
+
+        const updated = this.lifePointsArray.slice();
+
+        updated.pop();
+
+        this.lifePointsArray = updated;
+      }
+
+      init() {
+        let increment = 0
+
+        this.max = randomNumber(9, 3);
+        this.lifePoints = 3;
+        this.randomNumber = randomNumber(this.max);
+        this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
+          const result = increment; increment = increment + 1; return result; 
+        });
+
+        this.lifePointsArray = new Array(this.lifePoints).fill('#');
+      }
+
+      constructor() {
+        super();
+
+        this.init();
       }
     }
 
