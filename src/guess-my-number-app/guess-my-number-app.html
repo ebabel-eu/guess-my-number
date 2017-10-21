@@ -16,23 +16,27 @@
       </template>
     </h2>
 
-    <p>Guess my number (between 0 and [[max]])</p>
-
-    <p>Hint: [[hint]]</p>
+    <p>Guess my number between 0 and [[max]]</p>
 
     <template is="dom-repeat" items="[[answerChoices]]">
       <button on-click="isCorrect">[[item]]</button>
     </template>
 
-    <!--<p>DEBUG: random number to guess is [[randomNumber]]</p>-->
+    <template is="dom-if" if="[[hint]]">
+      <p>[[hint]]</p>
+    </template>
 
+    <template is="dom-if" if="[[showGameOver]]">
+      <p>Game over, the right answer was [[randomNumber]].</p>
+    </template>
 
-    <button on-click="init">Start again</button>
-  
-  <template is="dom-if" if="[[showGameOver]]">
-      RIP, Do you want to start over?
-  </template>
-  
+    <template is="dom-if" if="[[showWinGame]]">
+      <p>You have won! The right answer was indeed [[randomNumber]].</p>
+    </template>
+
+    <p>
+      <button on-click="init">Play again</button>
+    </p>
   </template>
 
   <script>
@@ -40,7 +44,7 @@
      * @customElement
      * @polymer
      */
-    const randomNumber = (max, min = 0) => Math.round(Math.random() * max) + min;
+    const randomNumber = (max, min = 0) => Math.floor(Math.random() * max) + min;
 
     class GuessMyNumberApp extends Polymer.Element {
       static get is() { return 'guess-my-number-app'; }
@@ -65,8 +69,11 @@
             type: String,
           },
           showGameOver: {
-            type: Boolean, value: false,
+            type: Boolean,
           },
+          showWinGame: {
+            type: Boolean,
+          }
         };
       }
 
@@ -82,31 +89,25 @@
       }
 
       isCorrect(e) {
-        if(this.randomNumber == e.toElement.innerText){
-          alert("You win!");
+        if (this.lifePoints > 0 && this.randomNumber == e.toElement.innerText){
+          this.showWinGame = true;
+          this.showGameOver = false;
+          this.hint = '';
         } else {
           this.loseLife();
           this.hiOrLo(e);
-          this.isGameOver();
-        }
-      }
-
-      isGameOver(){
-        if (this.lifePoints === 0){
-          /*if (window.confirm("RIP, Do you want to start over?")) {
-            this.init();
-          }else {
-            this.isGameOver();
-          }*/
-          this.showGameOver = true;
+          this.showGameOver = this.lifePoints === 0;
+          this.showWinGame = false;
         }
       }
 
       hiOrLo(e) {
-        if(e.toElement.innerText < this.randomNumber){
-          this.hint = "Your number is higher than te anwser."
-        }else if(e.toElement.innerText > this.randomNumber){
-          this.hint = "Your number is lower than te anwser."
+        if (e.toElement.innerText < this.randomNumber) {
+          this.hint = `${e.toElement.innerText} is too low.`;
+        }
+
+        if (e.toElement.innerText > this.randomNumber) {
+          this.hint = `${e.toElement.innerText} is too high.`;
         }
       }
 
@@ -127,6 +128,7 @@
 
         this.lifePointsArray = new Array(this.lifePoints).fill('\u2661');
         this.showGameOver = false;
+        this.showWinGame = false;
         this.hint = " ";
       }
 
