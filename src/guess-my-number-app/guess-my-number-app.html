@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -17,13 +18,21 @@
 
     <p>Guess my number (between 0 and [[max]])</p>
 
+    <p>Hint: [[hint]]</p>
+
     <template is="dom-repeat" items="[[answerChoices]]">
-      <button on-click="loseLife">[[item]]</button>
+      <button on-click="isCorrect">[[item]]</button>
     </template>
 
-    <p>DEBUG: random number to guess is [[randomNumber]]</p>
+    <!--<p>DEBUG: random number to guess is [[randomNumber]]</p>-->
+
 
     <button on-click="init">Start again</button>
+  
+  <template is="dom-if" if="[[showGameOver]]">
+      RIP, Do you want to start over?
+  </template>
+  
   </template>
 
   <script>
@@ -52,6 +61,12 @@
           lifePointsArray: {
             type: Array,
           },
+          hint: {
+            type: String,
+          },
+          showGameOver: {
+            type: Boolean, value: false,
+          },
         };
       }
 
@@ -66,17 +81,53 @@
         this.lifePointsArray = updated;
       }
 
+      isCorrect(e) {
+        if(this.randomNumber == e.toElement.innerText){
+          alert("You win!");
+        } else {
+          this.loseLife();
+          this.hiOrLo(e);
+          this.isGameOver();
+        }
+      }
+
+      isGameOver(){
+        if (this.lifePoints === 0){
+          /*if (window.confirm("RIP, Do you want to start over?")) {
+            this.init();
+          }else {
+            this.isGameOver();
+          }*/
+          this.showGameOver = true;
+        }
+      }
+
+      hiOrLo(e) {
+        if(e.toElement.innerText < this.randomNumber){
+          this.hint = "Your number is higher than te anwser."
+        }else if(e.toElement.innerText > this.randomNumber){
+          this.hint = "Your number is lower than te anwser."
+        }
+      }
+
       init() {
         let increment = 0
 
         this.max = randomNumber(9, 3);
-        this.lifePoints = 3;
+        this.lifePoints = this.max - 3;
+        if (this.lifePoints > 3) {
+          this.lifePoints = 3;
+        } else if (this.lifePoints < 1 ) {
+          this.lifePoints = 1;
+        }
         this.randomNumber = randomNumber(this.max);
         this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
           const result = increment; increment = increment + 1; return result; 
         });
 
-        this.lifePointsArray = new Array(this.lifePoints).fill('#');
+        this.lifePointsArray = new Array(this.lifePoints).fill('\u2661');
+        this.showGameOver = false;
+        this.hint = " ";
       }
 
       constructor() {
