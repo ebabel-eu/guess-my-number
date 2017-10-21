@@ -1,0 +1,32 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="guess-my-number-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class GuessMyNumberApp extends Polymer.Element {
+      static get is() { return 'guess-my-number-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'guess-my-number-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(GuessMyNumberApp.is, GuessMyNumberApp);
+  </script>
+</dom-module>

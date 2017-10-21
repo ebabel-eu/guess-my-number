@@ -1,0 +1,7 @@
+{
+  "name": "guess-my-number",
+  "short_name": "guess-my-number",
+  "description": "Guess a number",
+  "start_url": "/",
+  "display": "standalone"
+}
