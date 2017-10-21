@@ -1,26 +1,57 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+<link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../../bower_components/paper-styles/typography.html">
 
 <dom-module id="guess-my-number-app">
   <template>
     <style>
       :host {
         display: block;
+        padding: 20px;
+        border-radius: 20px;
+        background-color: var(--paper-blue-50);
+        max-width: 480px;
+
+        @apply --paper-font-common-base;
+      }
+
+      h1 {
+        color: var(--paper-blue-900);
+        margin: 0 0 1em;
+      }
+
+      h2 {
+        color: var(--paper-blue-400);
+        font-size: 2em;
+        margin: 0;
+      }
+
+      button {
+        margin-bottom: 1em;
+        width: 3em;
+      }
+
+      .play-again {
+        width: auto;
+        margin: 0;
       }
     </style>
+
+    <h1>Which number am I thinking of?</h1>
+
+    <template is="dom-if" if="[[!showWinGame]]">
+      <template is="dom-repeat" items="[[answerChoices]]">
+        <button on-click="isCorrect">[[item]]</button>
+      </template>
+    </template>
+
     <h2>
-      [[lifePoints]] life points
       <template is="dom-repeat" items="[[lifePointsArray]]">
         [[item]]
       </template>
     </h2>
-
-    <p>Guess my number between 0 and [[max]]</p>
-
-    <template is="dom-repeat" items="[[answerChoices]]">
-      <button on-click="isCorrect">[[item]]</button>
-    </template>
 
     <template is="dom-if" if="[[hint]]">
       <p>[[hint]]</p>
@@ -28,12 +59,12 @@
 
     <template is="dom-if" if="[[showGameOver]]">
       <p>Game over, the right answer was [[randomNumber]].</p>
-      <p><button on-click="init">Play again</button></p>
+      <p><button on-click="init" class="play-again">Play again</button></p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
       <p>You have won! The right answer was indeed [[randomNumber]].</p>
-      <p><button on-click="init">Play again</button></p>
+      <p><button on-click="init" class="play-again">Play again</button></p>
     </template>
 
   </template>
