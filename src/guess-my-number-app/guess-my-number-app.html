@@ -28,22 +28,17 @@
 
     <template is="dom-if" if="[[showGameOver]]">
       <p>Game over, the right answer was [[randomNumber]].</p>
+      <p><button on-click="init">Play again</button></p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
       <p>You have won! The right answer was indeed [[randomNumber]].</p>
+      <p><button on-click="init">Play again</button></p>
     </template>
 
-    <p>
-      <button on-click="init">Play again</button>
-    </p>
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
     const randomNumber = (max, min = 0) => Math.floor(Math.random() * max) + min;
 
     class GuessMyNumberApp extends Polymer.Element {
@@ -114,13 +109,12 @@
       init() {
         let increment = 0
 
-        this.max = randomNumber(9, 3);
-        this.lifePoints = this.max - 3;
-        if (this.lifePoints > 3) {
-          this.lifePoints = 3;
-        } else if (this.lifePoints < 1 ) {
-          this.lifePoints = 1;
-        }
+        this.max = randomNumber(14, 7);
+
+        // Formula is log2(n+1) optimum attemps to guess a number n.
+        // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
+        this.lifePoints = Math.round(Math.log2(this.max + 1));
+
         this.randomNumber = randomNumber(this.max);
         this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
           const result = increment; increment = increment + 1; return result; 
