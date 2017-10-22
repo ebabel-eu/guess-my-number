@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 <link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -28,9 +29,11 @@
         margin: 0;
       }
 
-      button {
+      paper-button {
         margin-bottom: 1em;
-        width: 3em;
+        background-color: var(--paper-blue-500);
+        color: white;
+        font-weight: 600;
       }
 
       .play-again {
@@ -43,7 +46,7 @@
 
     <template is="dom-if" if="[[showAnswerChoices]]">
       <template is="dom-repeat" items="[[answerChoices]]">
-        <button on-click="isCorrect">[[item]]</button>
+        <paper-button raised on-click="isCorrect" class="red">[[item]]</paper-button>
       </template>
     </template>
 
@@ -58,13 +61,16 @@
     </template>
 
     <template is="dom-if" if="[[showGameOver]]">
-      <p>Game over, the right answer was [[randomNumber]].</p>
-      <p><button on-click="init" class="play-again">Play again</button></p>
+      <p>Game over, the right answer was [[randomNumber]]. You lost 1 point from your total score.</p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
-      <p>You have won! The right answer was indeed [[randomNumber]].</p>
-      <p><button on-click="init" class="play-again">Play again</button></p>
+      <p>You have won [[lifePoints]] points! The right answer was indeed [[randomNumber]].</p>
+    </template>
+  
+    <template is="dom-if" if="[[!showAnswerChoices]]">
+      <p>Total score: [[score]] points</p>
+      <p><paper-button raised on-click="init" class="play-again">Play again</paper-button></p>
     </template>
 
   </template>
@@ -103,6 +109,10 @@
           showAnswerChoices: {
             type: Boolean,
           },
+          score: {
+            type: Number,
+            value: 0,
+          },
         };
       }
 
@@ -115,6 +125,10 @@
         updated.pop();
 
         this.lifePointsArray = updated;
+
+        if (this.lifePoints <= 0) {
+          this.score = this.score - 1;
+        }
       }
 
       isCorrect(e) {
@@ -122,6 +136,7 @@
           this.showWinGame = true;
           this.showGameOver = false;
           this.hint = '';
+          this.score = this.score + this.lifePoints;
         } else {
           this.loseLife();
           this.hiOrLo(e);
@@ -149,7 +164,7 @@
 
         // Formula is log2(n+1) optimum attemps to guess a number n.
         // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
-        this.lifePoints = Math.round(Math.log2(this.max + 1));
+        this.lifePoints = Math.round(Math.log2(this.max + 2)); // +2 instead of +1 because 0 is also a choice.
 
         this.randomNumber = randomNumber(this.max);
         this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
