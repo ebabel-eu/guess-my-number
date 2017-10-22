@@ -4,12 +4,24 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/bower_components/**"
     ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(jpg|jpeg|gif|png|ico|js)",
+        "headers": [
+          {
+            "key": "Expires",
+            "value": "Wed, 9 Feb 2078 15:00:00 GMT"
+          }
+        ]
       }
     ]
   }
