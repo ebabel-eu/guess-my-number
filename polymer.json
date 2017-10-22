@@ -3,6 +3,7 @@
   "shell": "src/guess-my-number-app/guess-my-number-app.html",
   "sources": [
     "src/**/*",
+    "images/**/*",
     "robots.txt"
   ],
   "extraDependencies": [
