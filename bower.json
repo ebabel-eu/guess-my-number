@@ -1,11 +1,12 @@
 {
   "name": "guess-my-number",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Guess my number",
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#2.0.0",
-    "paper-styles": "2.0.0"
+    "paper-styles": "2.0.0",
+    "paper-button": "2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#6.0.0",
