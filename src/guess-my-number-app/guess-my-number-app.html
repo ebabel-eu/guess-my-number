@@ -25,8 +25,8 @@
 
       h2 {
         color: var(--paper-blue-400);
-        font-size: 2em;
-        margin: 0;
+        font-size: 3.5em;
+        margin: 0 4px;
       }
 
       paper-button {
@@ -36,17 +36,21 @@
         font-weight: 600;
       }
 
+      .total-score {
+        font-size: 1.5em;
+      }
+
       .play-again {
         width: auto;
         margin: 0;
       }
     </style>
 
-    <h1>Which number am I thinking of?</h1>
+    <h1>[[title]]</h1>
 
     <template is="dom-if" if="[[showAnswerChoices]]">
       <template is="dom-repeat" items="[[answerChoices]]">
-        <paper-button raised on-click="isCorrect" class="red">[[item]]</paper-button>
+        <paper-button raised on-click="isCorrect">[[item]]</paper-button>
       </template>
     </template>
 
@@ -61,15 +65,17 @@
     </template>
 
     <template is="dom-if" if="[[showGameOver]]">
-      <p>Game over, the right answer was [[randomNumber]]. You lost 1 point from your total score.</p>
+      <p>The correct answer was [[randomNumber]].<p>
+      <p>You lost 1 point from your total score.</p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
-      <p>You have won [[lifePoints]] points! The right answer was indeed [[randomNumber]].</p>
+      <p>You have won [[lifePoints]] points!</p>
+      <p>The correct answer was indeed [[randomNumber]].</p>
     </template>
   
     <template is="dom-if" if="[[!showAnswerChoices]]">
-      <p>Total score: [[score]] points</p>
+      <h1 class="total-score">Total score: [[score]]</h1>
       <p><paper-button raised on-click="init" class="play-again">Play again</paper-button></p>
     </template>
 
@@ -113,6 +119,9 @@
             type: Number,
             value: 0,
           },
+          title: {
+            type: String,
+          },
         };
       }
 
@@ -128,15 +137,17 @@
 
         if (this.lifePoints <= 0) {
           this.score = this.score - 1;
+          this.title = 'Game over';
         }
       }
 
       isCorrect(e) {
-        if (this.lifePoints > 0 && this.randomNumber == e.toElement.innerText){
+        if (this.lifePoints > 0 && this.randomNumber == e.currentTarget.innerText){
           this.showWinGame = true;
           this.showGameOver = false;
           this.hint = '';
           this.score = this.score + this.lifePoints;
+          this.title = 'You win!';
         } else {
           this.loseLife();
           this.hiOrLo(e);
@@ -148,12 +159,12 @@
       }
 
       hiOrLo(e) {
-        if (e.toElement.innerText < this.randomNumber) {
-          this.hint = `${e.toElement.innerText} is too low.`;
+        if (e.currentTarget.innerText < this.randomNumber) {
+          this.hint = `${e.currentTarget.innerText} is too low.`;
         }
 
-        if (e.toElement.innerText > this.randomNumber) {
-          this.hint = `${e.toElement.innerText} is too high.`;
+        if (e.currentTarget.innerText > this.randomNumber) {
+          this.hint = `${e.currentTarget.innerText} is too high.`;
         }
       }
 
@@ -171,11 +182,13 @@
           const result = increment; increment = increment + 1; return result; 
         });
 
-        this.lifePointsArray = new Array(this.lifePoints).fill('\u2661');
+        this.lifePointsArray = new Array(this.lifePoints).fill('\u272a');
         this.showGameOver = false;
         this.showWinGame = false;
-        this.hint = " ";
+        this.hint = '';
         this.showAnswerChoices = true;
+
+        this.title = 'Which number am I thinking of?';
       }
 
       constructor() {
