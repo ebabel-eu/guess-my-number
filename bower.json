@@ -1,6 +1,6 @@
 {
   "name": "guess-my-number",
-  "version": "3.0.1",
+  "version": "3.1.1",
   "description": "Guess my number",
   "main": "index.html",
   "dependencies": {
