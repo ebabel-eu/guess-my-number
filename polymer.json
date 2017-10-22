@@ -1,7 +1,14 @@
 {
+  "entrypoint": "index.html",
+  "shell": "src/guess-my-number-app/guess-my-number-app.html",
+  "sources": [
+    "src/**/*",
+    "robots.txt"
+  ],
+  "extraDependencies": [
+    "manifest.json"
+  ],
   "lint": {
-    "rules": [
-      "polymer-2"
-    ]
+    "rules": ["polymer-2"]
   }
 }
