@@ -7,7 +7,7 @@
     "polymer": "Polymer/polymer#2.0.0",
     "paper-styles": "2.0.0",
     "paper-button": "2.0.0",
-    "voice-elements": "ebabel-eu/voice-elements#2.0.0"
+    "voice-elements": "ebabel-eu/voice-elements#^2.0.0"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#6.0.0",
