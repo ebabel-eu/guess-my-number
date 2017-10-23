@@ -4,6 +4,7 @@
 <link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/voice-elements/dist/voice-player.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -47,6 +48,7 @@
     </style>
 
     <h1>[[title]]</h1>
+    <voice-player autoplay id="voicePlayer" accent="en-GB" text=[[title]]></voice-player>
 
     <template is="dom-if" if="[[showAnswerChoices]]">
       <template is="dom-repeat" items="[[answerChoices]]">
@@ -60,23 +62,18 @@
       </template>
     </h2>
 
-    <template is="dom-if" if="[[hint]]">
-      <p>[[hint]]</p>
-    </template>
-
     <template is="dom-if" if="[[showGameOver]]">
       <p>The correct answer was [[randomNumber]].<p>
       <p>You lost 1 point from your total score.</p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
-      <p>You have won [[lifePoints]] points!</p>
       <p>The correct answer was indeed [[randomNumber]].</p>
     </template>
   
     <template is="dom-if" if="[[!showAnswerChoices]]">
       <h1 class="total-score">Total score: [[score]]</h1>
-      <p><paper-button raised on-click="init" class="play-again">Play again</paper-button></p>
+      <p><paper-button raised on-click="playAgain" class="play-again">Play again</paper-button></p>
     </template>
 
   </template>
@@ -103,9 +100,6 @@
           lifePointsArray: {
             type: Array,
           },
-          hint: {
-            type: String,
-          },
           showGameOver: {
             type: Boolean,
           },
@@ -121,6 +115,7 @@
           },
           title: {
             type: String,
+            value: 'Which number am I thinking of?',
           },
         };
       }
@@ -138,19 +133,26 @@
         if (this.lifePoints <= 0) {
           this.score = this.score - 1;
           this.title = 'Game over';
+          this.speak(this.$.voicePlayer);
         }
+      }
+
+      speak(player, text = this.title) {
+        player.speech.text = text;
+        player.speak();
       }
 
       isCorrect(e) {
         if (this.lifePoints > 0 && this.randomNumber == e.currentTarget.innerText){
           this.showWinGame = true;
           this.showGameOver = false;
-          this.hint = '';
           this.score = this.score + this.lifePoints;
-          this.title = 'You win!';
+
+          this.title = `You win ${this.lifePoints} points!`;
+          this.speak(this.$.voicePlayer);
         } else {
           this.loseLife();
-          this.hiOrLo(e);
+          this.highOrLow(e);
           this.showGameOver = this.lifePoints === 0;
           this.showWinGame = false;
         }
@@ -158,14 +160,26 @@
         this.showAnswerChoices = !(this.showGameOver || this.showWinGame);
       }
 
-      hiOrLo(e) {
+      highOrLow(e) {
+        if (this.lifePoints <= 0) {
+          return;
+        }
+
         if (e.currentTarget.innerText < this.randomNumber) {
-          this.hint = `${e.currentTarget.innerText} is too low.`;
+          this.title = `${e.currentTarget.innerText} is too low.`;
         }
 
         if (e.currentTarget.innerText > this.randomNumber) {
-          this.hint = `${e.currentTarget.innerText} is too high.`;
+          this.title = `${e.currentTarget.innerText} is too high.`;
         }
+
+        this.speak(this.$.voicePlayer);
+      }
+
+      playAgain() {
+        this.title = 'Which number?';
+        this.init();
+        this.speak(this.$.voicePlayer);
       }
 
       init() {
@@ -185,10 +199,7 @@
         this.lifePointsArray = new Array(this.lifePoints).fill('\u272a');
         this.showGameOver = false;
         this.showWinGame = false;
-        this.hint = '';
         this.showAnswerChoices = true;
-
-        this.title = 'Which number am I thinking of?';
       }
 
       constructor() {
