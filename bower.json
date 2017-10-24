@@ -2,7 +2,22 @@
   "name": "guess-my-number",
   "version": "3.1.2",
   "description": "Guess my number",
+  "authors": [
+    "Nadjib Amar"
+  ],
+  "keywords": [
+    "polymer2",
+    "polymer",
+    "game"
+  ],
   "main": "index.html",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ebabel-eu/guess-my-number.git"
+  },
+  "license": "GPL-3.0",
+  "homepage": "https://which-number.firebaseapp.com/",
   "dependencies": {
     "polymer": "Polymer/polymer#2.0.0",
     "paper-styles": "2.0.0",
