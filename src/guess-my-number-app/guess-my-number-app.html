@@ -10,31 +10,59 @@
   <template>
     <style>
       :host {
+        --guess-my-number-light: var(--paper-blue-50);
+        --guess-my-number-dark: var(--paper-blue-500);
+
         display: block;
-        padding: 20px;
-        border-radius: 20px;
-        background-color: var(--paper-blue-50);
+        border-radius: 16px;
+        background-color: var(--guess-my-number-light);
+        min-width: 300px;
         max-width: 480px;
 
         @apply --paper-font-common-base;
       }
 
       h1 {
-        color: var(--paper-blue-900);
-        margin: 0 0 .5em;
+        background-color: var(--guess-my-number-dark);
+        color: var(--guess-my-number-light);
+        margin: 0;
       }
 
       h2 {
-        color: var(--paper-blue-400);
+        color: var(--guess-my-number-dark);
         font-size: 3.5em;
-        margin: 0 4px;
+        margin: 0 0 .15em;
+        padding: 0 16px;
+        line-height: 1em;
+      }
+
+      header h1 {
+        border-radius: 16px 16px 0 0;
+        padding: 10px 16px;
+        margin: 0 0 .25em;
+      }
+
+      footer h1 {
+        border-radius: 0 0 16px 16px;
+        padding: 6px 16px;
+        margin: 1em 0 0;
       }
 
       paper-button {
         margin-bottom: 1em;
-        background-color: var(--paper-blue-500);
-        color: white;
+        background-color: var(--guess-my-number-dark);
+        color: var(--paper-blue-50);
         font-weight: 600;
+      }
+
+      p {
+        margin: 1em 0;
+        padding: 0 16px;
+        line-height: 1.5em;
+      }
+
+      .main-game-ui {
+        padding: 0 10px;
       }
 
       .total-score {
@@ -43,39 +71,50 @@
 
       .play-again {
         width: auto;
-        margin: 0;
+        margin: 0 0 1em;
+      }
+
+      .right {
+        text-align: right;
       }
     </style>
 
-    <h1>[[title]]</h1>
+    <header>
+      <h1>[[title]]</h1>
+      <h2>
+        <template is="dom-repeat" items="[[lifePointsArray]]">
+          <span>[[item]]</span>
+        </template>
+      </h2>
+    </header>
+
     <voice-player autoplay id="voicePlayer" accent="en-GB" text=[[title]]></voice-player>
 
-    <template is="dom-if" if="[[showAnswerChoices]]">
-      <template is="dom-repeat" items="[[answerChoices]]">
-        <paper-button raised on-click="isCorrect">[[item]]</paper-button>
+    <section class="main-game-ui">
+      <template is="dom-if" if="[[showAnswerChoices]]">
+        <template is="dom-repeat" items="[[answerChoices]]">
+          <paper-button raised on-click="isCorrect">[[item]]</paper-button>
+        </template>
       </template>
-    </template>
-
-    <h2>
-      <template is="dom-repeat" items="[[lifePointsArray]]">
-        <span>[[item]]</span>
-      </template>
-    </h2>
+    </section>
 
     <template is="dom-if" if="[[showGameOver]]">
       <p>The correct answer was [[randomNumber]].<p>
-      <p>You lost 1 point from your total score.</p>
+      <p>You lost 1 point from your all-time score.</p>
     </template>
 
     <template is="dom-if" if="[[showWinGame]]">
       <p>The correct answer was indeed [[randomNumber]].</p>
     </template>
-  
+
     <template is="dom-if" if="[[!showAnswerChoices]]">
-      <h1 class="total-score">Total score: [[score]]</h1>
-      <p><paper-button raised on-click="playAgain" class="play-again">Play again</paper-button></p>
+      <p class="right"><paper-button raised on-click="playAgain" class="play-again">Play again</paper-button></p>
     </template>
 
+    <footer>
+      <h1 class="total-score right">All-time score: [[score]]</h1>
+    </footer>
+  
   </template>
 
   <script>
@@ -115,7 +154,7 @@
           },
           title: {
             type: String,
-            value: 'Which number am I thinking of?',
+            value: 'Guess my number',
           },
         };
       }
@@ -132,7 +171,7 @@
 
         if (this.lifePoints <= 0) {
           this.score = this.score - 1;
-          this.title = 'Game over';
+          this.title = 'Try again?';
           this.speak(this.$.voicePlayer);
         }
       }
@@ -166,11 +205,11 @@
         }
 
         if (e.currentTarget.innerText < this.randomNumber) {
-          this.title = `${e.currentTarget.innerText} is too low.`;
+          this.title = `${e.currentTarget.innerText} is too low`;
         }
 
         if (e.currentTarget.innerText > this.randomNumber) {
-          this.title = `${e.currentTarget.innerText} is too high.`;
+          this.title = `${e.currentTarget.innerText} is too high`;
         }
 
         this.speak(this.$.voicePlayer);
