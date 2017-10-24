@@ -12,6 +12,7 @@
       :host {
         --guess-my-number-light: var(--paper-blue-50);
         --guess-my-number-dark: var(--paper-blue-500);
+        --guess-my-number-highlight: var(--paper-yellow-900);
 
         display: block;
         border-radius: 16px;
@@ -29,7 +30,7 @@
       }
 
       h2 {
-        color: var(--guess-my-number-dark);
+        color: var(--guess-my-number-highlight);
         font-size: 3.5em;
         margin: 0 0 .15em;
         padding: 0 16px;
@@ -46,6 +47,7 @@
         border-radius: 0 0 16px 16px;
         padding: 6px 16px;
         margin: 1em 0 0;
+        background-color: var(--guess-my-number-highlight);
       }
 
       paper-button {
@@ -108,7 +110,7 @@
     </template>
 
     <template is="dom-if" if="[[!showAnswerChoices]]">
-      <p class="right"><paper-button raised on-click="playAgain" class="play-again">Play again</paper-button></p>
+      <p class="right"><paper-button raised on-click="playAgain" class="play-again">Play</paper-button></p>
     </template>
 
     <footer>
