@@ -57,7 +57,7 @@
       }
 
       p {
-        margin: 0 0 1.5em;
+        margin: .75em 0 1.5em;
         padding: 0 16px;
         line-height: 1.5em;
       }
@@ -100,6 +100,7 @@
     </section>
 
     <template is="dom-if" if="[[!showAnswerChoices]]">
+      <p class="center">Secret number was [[randomNumber]]</p>
       <p class="center"><paper-button raised on-click="playAgain" class="play-again">Play</paper-button></p>
     </template>
 
@@ -210,7 +211,7 @@
 
       playAgain() {
         this.init();
-        this.title = `Try to win ${this.stars} stars!`;
+        this.title = `Try to win ${this.stars} stars`;
         this.speak(this.$.voicePlayer);
       }
 
