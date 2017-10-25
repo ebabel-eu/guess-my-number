@@ -24,7 +24,9 @@ This will create builds of your application in the `build/` directory, optimized
 $ polymer serve build/default
 ```
 
-## Running Tests
+## Running End-to-end Tests
+
+Note: you need a recent version of Java SE installed on your machine to run the end to end tests.
 
 ```
 $ polymer test
