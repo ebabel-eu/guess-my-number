@@ -106,7 +106,7 @@
     </template>
 
     <template is="dom-if" if="[[!showAnswerChoices]]">
-      <h3 class="center">Secret number was [[randomNumber]]</h3>
+      <h3 class="center">Secret number was [[secretNumber]]</h3>
       <p class="center"><paper-button raised on-click="playAgain" class="play-again">Play</paper-button></p>
     </template>
 
@@ -129,7 +129,7 @@
           stars: {
             type: Number,
           },
-          randomNumber: {
+          secretNumber: {
             type: Number,
           },
           answerChoices: {
@@ -175,7 +175,7 @@
       }
 
       isCorrect(e) {
-        if (this.stars > 0 && this.randomNumber == e.currentTarget.innerText){
+        if (this.stars > 0 && this.secretNumber == e.currentTarget.innerText){
           this.showWinGame = true;
           this.showGameOver = false;
           this.score = this.score + this.stars;
@@ -204,11 +204,11 @@
           return;
         }
 
-        if (e.currentTarget.innerText < this.randomNumber) {
+        if (e.currentTarget.innerText < this.secretNumber) {
           this.title = `${e.currentTarget.innerText} is too low`;
         }
 
-        if (e.currentTarget.innerText > this.randomNumber) {
+        if (e.currentTarget.innerText > this.secretNumber) {
           this.title = `${e.currentTarget.innerText} is too high`;
         }
 
@@ -230,7 +230,7 @@
         // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
         this.stars = Math.round(Math.log2(this.max + 2)); // +2 instead of +1 because 0 is also a choice.
 
-        this.randomNumber = randomNumber(this.max);
+        this.secretNumber = randomNumber(this.max);
         this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
           const result = increment; increment = increment + 1; return result; 
         });
