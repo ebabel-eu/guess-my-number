@@ -44,3 +44,15 @@ $ firebase deploy
 ```
 
 Navigate to https://which-number.firebaseapp.com/
+
+## Development
+
+During development, the src files are used instead of the generated ones from build/default.
+
+```
+polymer serve
+```
+
+## Contribute to this project's repository
+
+Fork the repository on Github, create a branch with a name representative of what you are improving or fixing in the code and raise a pull request to be merged back to the develop branch of this repository.
