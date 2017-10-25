@@ -36,6 +36,12 @@
         line-height: 1em;
       }
 
+      h3 {
+        color: var(--guess-my-number-dark);
+        font-weight: normal;
+        font-size: 1.5em;
+      }
+
       header h1 {
         border-radius: 16px 16px 0 0;
         padding: 10px 16px;
@@ -57,7 +63,7 @@
       }
 
       p {
-        margin: .75em 0 1.5em;
+        margin: 1.5em 0;
         padding: 0 16px;
         line-height: 1.5em;
       }
@@ -90,17 +96,17 @@
     </header>
 
     <voice-player autoplay id="voicePlayer" accent="en-GB" text=[[title]]></voice-player>
-
-    <section class="main-game-ui">
-      <template is="dom-if" if="[[showAnswerChoices]]">
+    
+    <template is="dom-if" if="[[showAnswerChoices]]">
+      <section class="main-game-ui">
         <template is="dom-repeat" items="[[answerChoices]]">
           <paper-button raised on-click="isCorrect">[[item]]</paper-button>
         </template>
-      </template>
-    </section>
+      </section>
+    </template>
 
     <template is="dom-if" if="[[!showAnswerChoices]]">
-      <p class="center">Secret number was [[randomNumber]]</p>
+      <h3 class="center">Secret number was [[randomNumber]]</h3>
       <p class="center"><paper-button raised on-click="playAgain" class="play-again">Play</paper-button></p>
     </template>
 
