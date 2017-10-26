@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/voice-elements/dist/voice-player.html">
+<link rel="import" href="../../bower_components/random-number/random-number.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -21,6 +22,18 @@
         margin: 0 auto;
 
         @apply --paper-font-common-base;
+      }
+
+      .debug {
+        background-color: var(--paper-yellow-200);
+        color: var(--paper-red-900);
+        padding: 20px 20px 20px 40px;
+        position: absolute;
+        width: 100%;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
       }
 
       h1 {
@@ -114,12 +127,25 @@
     <footer>
       <h1 class="total-score right">[[score]] &#10026;</h1>
     </footer>
+
+    <template is="dom-if" if="[[debug]]">
+      <ul class="debug">
+        <li>Max (not included): [[max]]</li>
+        <li>Secret number: [[secretNumber]]</li>
+      </ul>
+    </template>
   
   </template>
 
   <script>
-    const randomNumber = (max, min = 0) => Math.floor(Math.random() * max) + min;
-
+    /**
+     * `guess-my-number-app`
+     * Renders a game where the player guesses at a random number
+     * debug?: Boolean
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
     class GuessMyNumberApp extends Polymer.Element {
       static get is() { return 'guess-my-number-app'; }
       static get properties() {
@@ -155,6 +181,9 @@
           title: {
             type: String,
             value: 'Guess my number',
+          },
+          debug: {
+            type: Boolean,
           },
         };
       }
@@ -223,17 +252,20 @@
       }
 
       init() {
-        let increment = 0
+        let increment = 1;
 
-        this.max = randomNumber(14, 7);
+        this.max = randomNumber(21, 12);
 
         // Formula is log2(n+1) optimum attemps to guess a number n.
+        // To make the game a bit more difficult, I am flooring and using log2(n) instead of log2(n+1)
         // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
-        this.stars = Math.round(Math.log2(this.max + 2)); // +2 instead of +1 because 0 is also a choice.
+        this.stars = Math.floor(Math.log2(this.max));
 
-        this.secretNumber = randomNumber(this.max);
-        this.answerChoices = new Array(this.max + 1).fill(0).map(() => {
-          const result = increment; increment = increment + 1; return result; 
+        this.secretNumber = randomNumber(this.max, 1);
+        this.answerChoices = new Array(this.max - 1).fill(0).map(() => {
+          const result = increment;
+          increment = increment + 1;
+          return result; 
         });
 
         this.starsArray = new Array(this.stars).fill('\u272a');
@@ -242,10 +274,13 @@
         this.showAnswerChoices = true;
       }
 
-      constructor() {
-        super();
+      ready() {
+        super.ready();
 
         this.init();
+      }
+      constructor() {
+        super();
       }
     }
 
