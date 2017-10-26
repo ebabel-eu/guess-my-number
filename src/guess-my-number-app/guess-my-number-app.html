@@ -150,6 +150,9 @@
       static get is() { return 'guess-my-number-app'; }
       static get properties() {
         return {
+          debug: {
+            type: Boolean,
+          },
           max: {
             type: Number,
           },
@@ -181,9 +184,6 @@
           title: {
             type: String,
             value: 'Guess my number',
-          },
-          debug: {
-            type: Boolean,
           },
         };
       }
@@ -254,12 +254,12 @@
       init() {
         let increment = 1;
 
-        this.max = randomNumber(21, 12);
+        this.max = randomNumber(21, 7);
 
         // Formula is log2(n+1) optimum attemps to guess a number n.
-        // To make the game a bit more difficult, I am flooring and using log2(n) instead of log2(n+1)
+        // Note on difficulty: a 100% fair difficulty would be to round the result of log2, but I chose to floor it otherwise the game is too easy.
         // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
-        this.stars = Math.floor(Math.log2(this.max));
+        this.stars = Math.floor(Math.log2(this.max)); // since the max value is not included in the possible answers, there is no need to add +1 to max.
 
         this.secretNumber = randomNumber(this.max, 1);
         this.answerChoices = new Array(this.max - 1).fill(0).map(() => {
@@ -279,6 +279,7 @@
 
         this.init();
       }
+
       constructor() {
         super();
       }
