@@ -1,3 +1,5 @@
+<script src="../../bower_components/ebabel-library/dist/ebabel-library.js"></script>
+
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
@@ -5,7 +7,6 @@
 <link rel="import" href="../../bower_components/paper-styles/typography.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/voice-elements/dist/voice-player.html">
-<link rel="import" href="../../bower_components/random-number/random-number.html">
 
 <dom-module id="guess-my-number-app">
   <template>
@@ -108,8 +109,6 @@
         </template>
       </h2>
     </header>
-
-    <random-number id="randomGenerator"></random-number>
 
     <voice-player autoplay id="voicePlayer" accent="en-GB" text=[[title]]></voice-player>
     
@@ -256,14 +255,14 @@
       init() {
         let increment = 1;
 
-        this.max = this.$.randomGenerator.randomNumber(21, 7);
+        this.max = window['ebabel-library'].randomNumber(21, 7).toInt();
 
         // Formula is log2(n+1) optimum attemps to guess a number n.
         // Note on difficulty: a 100% fair difficulty would be to round the result of log2, but I chose to floor it otherwise the game is too easy.
         // See https://puzzling.stackexchange.com/questions/3074/6-tries-to-guess-a-number-between-1-100
         this.stars = Math.floor(Math.log2(this.max)); // since the max value is not included in the possible answers, there is no need to add +1 to max.
 
-        this.secretNumber = this.$.randomGenerator.randomNumber(this.max, 1);
+        this.secretNumber = window['ebabel-library'].randomNumber(this.max, 1).toInt();
         this.answerChoices = new Array(this.max - 1).fill(0).map(() => {
           const result = increment;
           increment = increment + 1;

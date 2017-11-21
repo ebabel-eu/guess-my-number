@@ -23,7 +23,7 @@
     "paper-styles": "~2.0.0",
     "paper-button": "~2.0.0",
     "voice-elements": "ebabel-eu/voice-elements#^2.0.0",
-    "random-number": "ebabel-eu/random-number#^2.0.0"
+    "ebabel-library": "^1.0.0"
   },
   "devDependencies": {
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#~2.0.0",
